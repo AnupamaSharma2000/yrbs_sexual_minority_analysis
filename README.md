@@ -1,6 +1,4 @@
-<<<<<<< HEAD
-# yrbs_sexual_minority_analysis
-=======
+
 # Principles of Data Science Project
 
 ## Overview
