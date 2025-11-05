@@ -1,6 +1,4 @@
-<<<<<<< HEAD
-# yrbs_sexual_minority_analysis
-=======
+
 # Principles of Data Science Project
 
 ## Overview
@@ -84,4 +82,3 @@ LinkedIn: https://linkedin.com/in/anupama-sharma22
 ---
 
 *This project is ongoing and will be updated as I complete my course*
->>>>>>> master
