@@ -5,7 +5,7 @@
 
 This project explores critical public health questions using extensive survey data, focusing on disparities and behavioral outcomes among sexual minority youth in the United States. The analysis centers on the 2023 Youth Risk Behavior Surveillance System (YRBSS) dataset, which for the first time includes questions on transgender identity alongside other sexual orientation metrics.
 
-Motivated by personal experience and scholarly interest, the project investigates differences between sexual minority and majority youth in areas including bullying, substance use, mental health, and victimization. The ultimate goal is to identify risk factors influencing adverse health outcomes while carefully addressing potential biases and confounding variables.
+This project investigates differences between sexual minority and majority youth in areas including bullying, substance use, mental health, and victimization. The ultimate goal is to identify risk factors influencing adverse health outcomes while carefully addressing potential biases and confounding variables.
 
 ---
 
