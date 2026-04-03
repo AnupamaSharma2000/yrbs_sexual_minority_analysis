@@ -1,11 +1,6 @@
-
 # YRBS Sexual Minority Youth Analysis
 
-## Overview
-
-This project explores critical public health questions using extensive survey data, focusing on disparities and behavioral outcomes among sexual minority youth in the United States. The analysis centers on the 2023 Youth Risk Behavior Surveillance System (YRBSS) dataset, which for the first time includes questions on transgender identity alongside other sexual orientation metrics.
-
-The project investigates differences between sexual minority and majority youth in areas including bullying, substance use, mental health, and victimization. The goal is to identify risk factors influencing adverse health outcomes while carefully addressing potential biases and confounding variables.
+Statistical analysis of health disparities among sexual minority youth using 2023 CDC YRBSS data (20K+ respondents). Investigates differences in bullying, substance use, mental health, and victimization between sexual minority and majority adolescents, culminating in predictive models for mental health risk stratification.
 
 ---
 
@@ -21,46 +16,83 @@ The project investigates differences between sexual minority and majority youth 
 
 ## Dataset
 
-- **Source:** 2023 Youth Risk Behavior Surveillance System (YRBSS)
-- **Population:** U.S. adolescents (ages ~13–17) in grades 9–12 from a representative sample of public, private, and Catholic schools.
-- **Sample Size:** Approximately 20,103 usable questionnaires after rigorous data cleaning.
-- **Variables:** Over 117 comprehensive variables covering demographics, health risk behaviors, mental health, bullying experiences, substance use, sexual activity, and victimization.
-- **Unique Data:** First inclusion of transgender identity data in the survey, along with detailed sexual identity questions.
+- **Source:** [2023 Youth Risk Behavior Surveillance System (YRBSS)](https://www.cdc.gov/yrbs/)
+- **Population:** U.S. adolescents (ages ~13–17) in grades 9–12
+- **Sample Size:** 20,103 usable questionnaires after data editing
+- **Variables:** 107 survey questions covering demographics, health risk behaviors, mental health, bullying, substance use, sexual activity, and victimization
+- **Notable:** First inclusion of transgender identity data in the survey
 
 ---
 
 ## Methodology
 
-- **Data Cleaning:** Handling missingness through stratification, matching, and replication strategies. Differentiating between MCAR, MAR, and MNAR patterns.
-- **Feature Engineering:** Creating composite sexual minority variables from sexual identity and sexual contact data.
-- **Statistical Analysis:** Comparing behavioral and experiential differences between groups while controlling for confounding factors like age, sex, and parental environment.
-- **Predictive Modeling:** Using mental health outcomes as key dependent variables, assessing the predictive power of bullying and substance use patterns.
-- **Visualization:** Exploratory data analysis including distribution plots, correlation matrices, and subgroup comparisons.
+### Data Preparation
+- Feature engineering: composite sexual/gender minority flag from sexual identity (q64) and sex of sexual contacts (q2 × q63)
+- Column renaming and labeling from YRBS codebook for interpretability
+- Ordinal binning for consistency across categorical variables
+- Weighted analysis using CDC-provided survey weights (adjusted for nonresponse, oversampling)
+
+### Missing Data Analysis
+- Classified missingness as MCAR, MAR, or MNAR
+- Weighted missing-rate comparisons across subgroups (LGBT status, sex, race, grade)
+- Multiple imputation (8 imputations) using iterative imputer with domain-aware pruning
+- Post-imputation distributional checks by race and sexual minority status
+
+### Dimensionality Reduction
+- Hypothesis-driven filtering: 107 → ~85 features
+- Redundancy removal via Cramér's V (threshold > 0.7): 85 → 81 features
+- Model-based feature importance (LightGBM) for final predictor selection
+
+### Predictive Modeling
+- **Target:** 3-class mental health risk (Low 73%, Moderate 16%, High 11%)
+- **Dataset:** 16,082 youth (80/20 stratified split)
+- **Models:**
+  - Random Forest (baseline)
+  - LightGBM with survey weights, class weights, and hyperparameter tuning (GridSearchCV)
+  - Multinomial Elastic Net logistic regression
+- **Evaluation:** Balanced accuracy, macro F1, high-risk recall, confusion matrices
+- **Interpretability:** SHAP values for feature importance across LGBT vs. majority subgroups
+- **Robustness:** Results pooled across multiple imputations
+
+### Mental Health Composite
+- PCA-derived risk score combining suicidal ideation, planning, attempts, sadness, and treatment needs
+- Clinically-weighted severity adjustments mapped to Low / Moderate / High risk categories
 
 ---
 
 ## Key Findings
 
-- Sexual minority youth report higher rates of bullying (both in-person and electronic), substance use, and mental health challenges compared to heterosexual peers.
-- Experiences of discrimination and victimization mediate the higher risk for suicidal ideation and attempts among LGBT youth.
-- Certain parental and social factors (such as family dysfunction and unstable housing) exacerbate these disparities.
+- Sexual minority youth report higher rates of bullying, substance use, and mental health challenges compared to heterosexual peers
+- Experiences of discrimination and victimization mediate the higher risk for suicidal ideation and attempts among LGBT youth
+- Parental and social factors (family dysfunction, unstable housing) exacerbate these disparities
+- LightGBM with SHAP reveals distinct risk factor profiles for LGBT vs. majority youth
 
 ---
 
 ## Project Structure
 
 ```
-├── yrbs_analysis_part1.ipynb   ← Exploratory analysis and data cleaning
-├── yrbs_analysis_part2.ipynb   ← Predictive modeling and results
+├── data/
+│   ├── raw/
+│   │   └── XXHq.csv                      ← Original YRBSS 2023 survey responses
+│   └── processed/
+│       └── yrbs_2023_processed.csv        ← Cleaned, encoded, feature-engineered dataset
+├── yrbs_analysis_part1.ipynb              ← Exploratory analysis and data cleaning
+├── yrbs_analysis_part2.ipynb              ← Statistical analysis and visualization
+├── yrbs_analysis_part3_modeling.ipynb      ← Feature engineering, imputation, ML modeling, and SHAP
 ├── LICENSE
 └── README.md
 ```
 
 ---
 
-## Usage
+## Dependencies
 
-Notebooks require `pandas`, `numpy`, `matplotlib`, and `scikit-learn`.
+```
+pandas, numpy, matplotlib, seaborn, plotly
+scikit-learn, lightgbm, shap
+tqdm
+```
 
 ---
 
