@@ -2,6 +2,20 @@
 
 Statistical analysis of health disparities among sexual minority youth using 2023 CDC YRBSS data (20K+ respondents). Investigates differences in bullying, substance use, mental health, and victimization between sexual minority and majority adolescents, culminating in predictive models for mental health risk stratification.
 
+**[View Interactive Analysis →](https://anupamasharma2000.github.io/yrbs_sexual_minority_analysis/)**
+
+---
+
+## Key Results
+
+| Metric | SGM Youth | Majority Youth | Ratio |
+|--------|-----------|----------------|-------|
+| High Mental Health Risk | 16.9% | 4.0% | 4.3× |
+| Bullying Prevalence | 73.4% | 71.3% | 1.03× |
+| Tobacco Use (any) | 18.8% | 6.0% | 3.1× |
+
+![Mental Health Risk by SGM Status](docs/plots/mental_health_risk.png)
+
 ---
 
 ## Research Questions
@@ -47,7 +61,6 @@ Statistical analysis of health disparities among sexual minority youth using 202
 - **Target:** 3-class mental health risk (Low 73%, Moderate 16%, High 11%)
 - **Dataset:** 16,082 youth (80/20 stratified split)
 - **Models:**
-  - Random Forest (baseline)
   - LightGBM with survey weights, class weights, and hyperparameter tuning (GridSearchCV)
   - Multinomial Elastic Net logistic regression
 - **Evaluation:** Balanced accuracy, macro F1, high-risk recall, confusion matrices
@@ -63,6 +76,7 @@ Statistical analysis of health disparities among sexual minority youth using 202
 ## Key Findings
 
 - Sexual minority youth report higher rates of bullying, substance use, and mental health challenges compared to heterosexual peers
+- SGM youth are 4.3× more likely to fall into the high mental health risk category
 - Experiences of discrimination and victimization mediate the higher risk for suicidal ideation and attempts among LGBT youth
 - Parental and social factors (family dysfunction, unstable housing) exacerbate these disparities
 - LightGBM with SHAP reveals distinct risk factor profiles for LGBT vs. majority youth
@@ -76,10 +90,11 @@ Statistical analysis of health disparities among sexual minority youth using 202
 │   ├── raw/
 │   │   └── XXHq.csv                      ← Original YRBSS 2023 survey responses
 │   └── processed/
-│       └── yrbs_2023_processed.csv        ← Cleaned, encoded, feature-engineered dataset
-├── yrbs_analysis_part1.ipynb              ← Exploratory analysis and data cleaning
-├── yrbs_analysis_part2.ipynb              ← Statistical analysis and visualization
-├── yrbs_analysis_part3_modeling.ipynb      ← Feature engineering, imputation, ML modeling, and SHAP
+│       └── .gitkeep
+├── docs/                                  ← GitHub Pages site
+│   ├── index.html                         ← Interactive analysis dashboard
+│   └── plots/                             ← Plotly JSON data + PNG fallbacks
+├── yrbs_analysis_clean.ipynb              ← Full analysis notebook (data → EDA → modeling)
 ├── LICENSE
 └── README.md
 ```

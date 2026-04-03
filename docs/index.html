@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YRBS Sexual Minority Youth Analysis</title>
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --font-display: 'Source Serif 4', Georgia, serif;
+            --font-body: 'Inter', system-ui, sans-serif;
+            --color-bg: #fafaf8;
+            --color-surface: #ffffff;
+            --color-text: #1a1a1a;
+            --color-text-muted: #5c5c5c;
+            --color-text-faint: #999;
+            --color-border: #e0e0e0;
+            --color-accent: #2c5f7c;
+            --color-accent-light: #eef4f8;
+            --color-sgm: #E84855;
+            --color-majority: #4A90D9;
+            --content-width: 960px;
+            --space-section: clamp(2rem, 5vw, 4rem);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html {
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+            scroll-behavior: smooth;
+            scroll-padding-top: 4rem;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--color-text);
+            background-color: var(--color-bg);
+        }
+
+        /* ── Header ─────────────────────────────────────────── */
+        .site-header {
+            background: linear-gradient(135deg, #1a3a4f 0%, #2c5f7c 50%, #3a7ca5 100%);
+            color: #fff;
+            padding: clamp(3rem, 8vw, 6rem) 1.5rem;
+            text-align: center;
+        }
+
+        .site-header h1 {
+            font-family: var(--font-display);
+            font-size: clamp(1.75rem, 4vw, 2.75rem);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            max-width: 800px;
+            margin-inline: auto;
+        }
+
+        .site-header .subtitle {
+            font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+            opacity: 0.9;
+            max-width: 700px;
+            margin-inline: auto;
+            line-height: 1.6;
+        }
+
+        .header-meta {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .header-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        /* ── Navigation ────────────────────────────────────── */
+        .nav-bar {
+            position: sticky;
+            top: 0;
+            background: var(--color-surface);
+            border-bottom: 1px solid var(--color-border);
+            z-index: 100;
+            overflow-x: auto;
+        }
+
+        .nav-bar ul {
+            display: flex;
+            list-style: none;
+            max-width: var(--content-width);
+            margin: 0 auto;
+            padding: 0 1rem;
+            gap: 0;
+        }
+
+        .nav-bar a {
+            display: block;
+            padding: 0.85rem 1rem;
+            text-decoration: none;
+            color: var(--color-text-muted);
+            font-size: 0.85rem;
+            font-weight: 500;
+            white-space: nowrap;
+            border-bottom: 2px solid transparent;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .nav-bar a:hover, .nav-bar a.active {
+            color: var(--color-accent);
+            border-bottom-color: var(--color-accent);
+        }
+
+        /* ── Main content ──────────────────────────────────── */
+        .content {
+            max-width: var(--content-width);
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        section {
+            padding: var(--space-section) 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        section:last-child {
+            border-bottom: none;
+        }
+
+        h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.4rem, 2.5vw, 1.75rem);
+            font-weight: 700;
+            color: var(--color-text);
+            margin-bottom: 1rem;
+            line-height: 1.25;
+        }
+
+        h3 {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        p {
+            max-width: 72ch;
+            margin-bottom: 1rem;
+            color: var(--color-text);
+        }
+
+        .lead {
+            font-size: 1.05rem;
+            color: var(--color-text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        /* ── Key stats ─────────────────────────────────────── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .stat-card .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: var(--font-display);
+            line-height: 1.2;
+        }
+
+        .stat-card .stat-value.sgm { color: var(--color-sgm); }
+        .stat-card .stat-value.majority { color: var(--color-majority); }
+        .stat-card .stat-value.accent { color: var(--color-accent); }
+
+        .stat-card .stat-label {
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+            margin-top: 0.35rem;
+            line-height: 1.4;
+        }
+
+        /* ── Plot containers ───────────────────────────────── */
+        .plot-container {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+
+        .plot-container .plot-title {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .plot-container .plot-desc {
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+            margin-bottom: 1rem;
+            max-width: 72ch;
+        }
+
+        .plotly-graph-div {
+            width: 100% !important;
+        }
+
+        /* ── Findings callouts ─────────────────────────────── */
+        .finding {
+            background: var(--color-accent-light);
+            border-left: 3px solid var(--color-accent);
+            border-radius: 0 6px 6px 0;
+            padding: 1rem 1.25rem;
+            margin: 1rem 0;
+            font-size: 0.925rem;
+        }
+
+        .finding strong {
+            color: var(--color-accent);
+        }
+
+        /* ── Methods box ───────────────────────────────────── */
+        .methods-box {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .methods-box ul {
+            padding-left: 1.25rem;
+            margin-top: 0.5rem;
+        }
+
+        .methods-box li {
+            margin-bottom: 0.35rem;
+            font-size: 0.925rem;
+            max-width: 72ch;
+        }
+
+        /* ── Footer ────────────────────────────────────────── */
+        .site-footer {
+            text-align: center;
+            padding: 2rem 1.5rem;
+            font-size: 0.8rem;
+            color: var(--color-text-faint);
+            border-top: 1px solid var(--color-border);
+        }
+
+        .site-footer a {
+            color: var(--color-accent);
+            text-decoration: none;
+        }
+
+        .site-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── Responsive ────────────────────────────────────── */
+        @media (max-width: 640px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .stat-card .stat-value {
+                font-size: 1.5rem;
+            }
+            .plot-container {
+                padding: 1rem 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <h1>YRBS Sexual Minority Youth Mental Health Risk Stratification</h1>
+        <p class="subtitle">
+            Analysis of health disparities among sexual and gender minority (SGM) youth
+            using the 2023 CDC Youth Risk Behavior Surveillance System
+        </p>
+        <div class="header-meta">
+            <span>Anupama Sharma</span>
+            <span>&middot;</span>
+            <span>University of Maryland</span>
+            <span>&middot;</span>
+            <span>N = 20,103 respondents</span>
+        </div>
+    </header>
+
+    <nav class="nav-bar">
+        <ul>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#mental-health">Mental Health</a></li>
+            <li><a href="#bullying">Bullying</a></li>
+            <li><a href="#substance-use">Substance Use</a></li>
+            <li><a href="#missingness">Missing Data</a></li>
+            <li><a href="#methods">Methods</a></li>
+        </ul>
+    </nav>
+
+    <div class="content">
+
+        <!-- ═══════ Overview ═══════ -->
+        <section id="overview">
+            <h2>Study Overview</h2>
+            <p class="lead">
+                This analysis examines health disparities between sexual and gender minority (SGM)
+                and majority youth across bullying, substance use, and mental health domains using
+                nationally representative weighted survey data.
+            </p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value accent">20,103</div>
+                    <div class="stat-label">Total Respondents</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value sgm">9,907</div>
+                    <div class="stat-label">SGM Youth (53%)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value majority">8,772</div>
+                    <div class="stat-label">Majority Youth</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value accent">107</div>
+                    <div class="stat-label">Survey Variables</div>
+                </div>
+            </div>
+
+            <p>
+                The combined SGM flag includes youth who identify as gay/lesbian, bisexual,
+                questioning, or transgender, as well as those reporting same-sex sexual contact.
+                All prevalence estimates use CDC-provided survey weights to account for complex
+                sampling design.
+            </p>
+        </section>
+
+        <!-- ═══════ Mental Health ═══════ -->
+        <section id="mental-health">
+            <h2>Mental Health Risk Stratification</h2>
+            <p class="lead">
+                A PCA-derived composite score combining suicidal ideation, planning, attempts,
+                sadness, treatment needs, and cognitive difficulty classifies youth into three
+                risk tiers using clinical cutoffs.
+            </p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value sgm">16.9%</div>
+                    <div class="stat-label">SGM Youth in High Risk</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value majority">4.0%</div>
+                    <div class="stat-label">Majority Youth in High Risk</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value sgm">4.3&times;</div>
+                    <div class="stat-label">Disparity Ratio</div>
+                </div>
+            </div>
+
+            <div class="plot-container">
+                <div class="plot-title">Mental Health Risk Distribution by SGM Status</div>
+                <div class="plot-desc">
+                    Weighted percentage of youth in each risk category. SGM youth are significantly
+                    overrepresented in the high-risk tier.
+                </div>
+                <div id="plot-mental-health"></div>
+            </div>
+
+            <div class="finding">
+                <strong>Finding:</strong> SGM youth are 4.3 times more likely to fall into the
+                high mental health risk category compared to their majority peers, with 16.9%
+                classified as high-risk versus 4.0%.
+            </div>
+        </section>
+
+        <!-- ═══════ Bullying ═══════ -->
+        <section id="bullying">
+            <h2>Bullying Prevalence</h2>
+            <p class="lead">
+                Bullying experience is measured as a composite of school-based and cyber bullying
+                (q23 and q24).
+            </p>
+
+            <div class="plot-container">
+                <div class="plot-title">Bullying Prevalence by SGM Status</div>
+                <div class="plot-desc">
+                    Weighted prevalence of reporting any bullying experience (school or cyber).
+                </div>
+                <div id="plot-bullying"></div>
+            </div>
+
+            <div class="finding">
+                <strong>Finding:</strong> Both SGM (73.4%) and majority (71.3%) youth report high
+                bullying rates, with a modest but notable gap. The composite binary measure may
+                understate the disparity visible in more granular frequency measures.
+            </div>
+        </section>
+
+        <!-- ═══════ Substance Use ═══════ -->
+        <section id="substance-use">
+            <h2>Substance Use Intensity</h2>
+            <p class="lead">
+                Substance use is categorized into intensity levels (None, Light, Moderate, Heavy)
+                across three domains: tobacco/nicotine, alcohol, and illicit drugs.
+            </p>
+
+            <div class="plot-container">
+                <div class="plot-title">Tobacco/Nicotine Use Intensity</div>
+                <div class="plot-desc">
+                    Weighted percentage at each use intensity level, comparing SGM and majority youth.
+                </div>
+                <div id="plot-tobacco"></div>
+            </div>
+
+            <div class="plot-container">
+                <div class="plot-title">Alcohol Use Intensity</div>
+                <div class="plot-desc">
+                    Weighted alcohol use distribution by SGM status.
+                </div>
+                <div id="plot-alcohol"></div>
+            </div>
+
+            <div class="plot-container">
+                <div class="plot-title">Drug Use Intensity</div>
+                <div class="plot-desc">
+                    Weighted drug use distribution by SGM status.
+                </div>
+                <div id="plot-drug"></div>
+            </div>
+
+            <div class="finding">
+                <strong>Finding:</strong> SGM youth consistently show higher rates of moderate
+                and heavy substance use across all three domains. The disparity is most
+                pronounced in tobacco/nicotine and drug use categories.
+            </div>
+        </section>
+
+        <!-- ═══════ Missingness ═══════ -->
+        <section id="missingness">
+            <h2>Missing Data Analysis</h2>
+            <p class="lead">
+                Understanding patterns of missingness is critical for survey-weighted analysis.
+                Differential missingness across subgroups can introduce bias if not accounted for.
+            </p>
+
+            <h3>Missingness Heatmap</h3>
+            <div class="plot-container">
+                <div class="plot-title">Missingness Heatmap: Top 20 Variables by Subgroup</div>
+                <div class="plot-desc">
+                    Weighted missing percentage across demographic subgroups. Variables are ordered by
+                    overall missingness. Darker cells indicate higher missingness rates.
+                </div>
+                <div id="plot-heatmap"></div>
+            </div>
+
+            <h3>Differential Missingness</h3>
+            <div class="plot-container">
+                <div class="plot-title">Top Variables with Differential Missingness</div>
+                <div class="plot-desc">
+                    Variables where missingness differs most between subgroup pairs (top 5 per comparison).
+                    Large differentials may indicate non-random missingness mechanisms.
+                </div>
+                <div id="plot-differential"></div>
+            </div>
+
+            <h3>Missingness by Domain</h3>
+            <div class="plot-container">
+                <div class="plot-title">Overall Missingness by Variable, Colored by Domain</div>
+                <div class="plot-desc">
+                    Every variable with any missing data, sorted by missing percentage and colored
+                    by its survey domain.
+                </div>
+                <div id="plot-domain"></div>
+            </div>
+
+            <div class="finding">
+                <strong>Finding:</strong> Sexual behavior and substance use questions show the
+                highest missingness rates. Some variables exhibit differential missingness by
+                SGM status and race, motivating the use of multiple imputation (MICE) in the
+                modeling pipeline.
+            </div>
+        </section>
+
+        <!-- ═══════ Methods ═══════ -->
+        <section id="methods">
+            <h2>Methods</h2>
+
+            <div class="methods-box">
+                <h3>Data Source</h3>
+                <ul>
+                    <li>2023 Youth Risk Behavior Surveillance System (YRBSS), CDC</li>
+                    <li>20,103 usable questionnaires from U.S. adolescents in grades 9&ndash;12</li>
+                    <li>Complex survey design with stratification, clustering, and weighting</li>
+                </ul>
+            </div>
+
+            <div class="methods-box">
+                <h3>SGM Classification</h3>
+                <ul>
+                    <li>Sexual identity (q64): Gay/lesbian, bisexual, other, questioning &rarr; minority</li>
+                    <li>Sexual contact (q63 &times; q2): Same-sex or both-sex contacts &rarr; minority</li>
+                    <li>Gender identity (q65): Transgender or questioning &rarr; minority</li>
+                    <li>Combined flag: any minority indicator above triggers SGM classification</li>
+                </ul>
+            </div>
+
+            <div class="methods-box">
+                <h3>Mental Health Composite</h3>
+                <ul>
+                    <li>7 binary indicators: sadness, ideation, planning, attempt, treatment, poor MH frequency, cognitive difficulty</li>
+                    <li>PCA-derived weights with clinical severity adjustments</li>
+                    <li>Normalized 0&ndash;10 scale, stratified at clinical cutoffs: Low (&le;1), Moderate (1&ndash;6), High (&gt;6)</li>
+                </ul>
+            </div>
+
+            <div class="methods-box">
+                <h3>Modeling Pipeline</h3>
+                <ul>
+                    <li>Multiple imputation via MICE (8 imputations) with domain-aware pruning</li>
+                    <li>LightGBM with survey weights, class weights, and GridSearchCV hyperparameter tuning</li>
+                    <li>SHAP values for feature importance and subgroup-specific risk factor profiles</li>
+                    <li>Post-imputation distributional validation by race and SGM status</li>
+                </ul>
+            </div>
+
+            <p>
+                All prevalence estimates on this page are weighted using CDC-provided survey
+                weights to produce nationally representative estimates.
+                Full analysis code is available on
+                <a href="https://github.com/AnupamaSharma2000/yrbs_sexual_minority_analysis" target="_blank" rel="noopener noreferrer">GitHub</a>.
+            </p>
+        </section>
+
+    </div>
+
+    <footer class="site-footer">
+        <p>
+            YRBS Sexual Minority Youth Analysis &middot;
+            Anupama Sharma &middot;
+            University of Maryland &middot;
+            <a href="https://github.com/AnupamaSharma2000/yrbs_sexual_minority_analysis" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+        </p>
+        <p style="margin-top: 0.5rem;">
+            Data: 2023 CDC Youth Risk Behavior Surveillance System
+        </p>
+    </footer>
+
+    <script>
+    // ── Load and render Plotly charts from JSON ───────────────────────────────
+
+    const plotConfig = {
+        responsive: true,
+        displayModeBar: true,
+        modeBarButtonsToRemove: ['lasso2d', 'select2d'],
+        displaylogo: false
+    };
+
+    const layoutOverrides = {
+        font: { family: 'Inter, system-ui, sans-serif', size: 13 },
+        plot_bgcolor: 'rgba(0,0,0,0)',
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        margin: { l: 60, r: 30, t: 10, b: 60 },
+        legend: { orientation: 'h', yanchor: 'bottom', y: 1.02, xanchor: 'right', x: 1 },
+        title: null,
+    };
+
+    async function loadPlot(divId, jsonFile, extraLayout) {
+        try {
+            const resp = await fetch(`plots/${jsonFile}`);
+            const fig = await resp.json();
+            const layout = {
+                ...fig.layout,
+                ...layoutOverrides,
+                ...(extraLayout || {}),
+            };
+            Plotly.newPlot(divId, fig.data, layout, plotConfig);
+        } catch (err) {
+            console.error(`Failed to load ${jsonFile}:`, err);
+            document.getElementById(divId).innerHTML =
+                '<p style="color:#999;text-align:center;padding:2rem">Chart could not be loaded.</p>';
+        }
+    }
+
+    // Load all plots
+    loadPlot('plot-mental-health', 'mental_health_risk.json');
+    loadPlot('plot-bullying', 'bullying_prevalence.json');
+    loadPlot('plot-tobacco', 'tobacco_use.json');
+    loadPlot('plot-alcohol', 'alcohol_use.json');
+    loadPlot('plot-drug', 'drug_use.json');
+    loadPlot('plot-heatmap', 'missingness_heatmap.json', { margin: { l: 150, r: 30, t: 10, b: 60 }, height: 650 });
+    loadPlot('plot-differential', 'differential_missingness.json', { height: 650, margin: { l: 60, r: 30, t: 40, b: 60 } });
+    loadPlot('plot-domain', 'missingness_by_domain.json', { margin: { l: 130, r: 30, t: 10, b: 60 } });
+
+    // ── Sticky nav highlight ──────────────────────────────────────────────────
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-bar a');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                navLinks.forEach(a => a.classList.remove('active'));
+                const activeLink = document.querySelector(`.nav-bar a[href="#${entry.target.id}"]`);
+                if (activeLink) activeLink.classList.add('active');
+            }
+        });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+    </script>
+
+</body>
+</html>
