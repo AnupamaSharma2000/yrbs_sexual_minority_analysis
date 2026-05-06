@@ -88,13 +88,13 @@ Statistical analysis of health disparities among sexual minority youth using 202
 ```
 ├── data/
 │   ├── raw/
-│   │   └── XXHq.csv                      ← Original YRBSS 2023 survey responses
+│   │   └── XXHq.csv                      <- Original YRBSS 2023 survey responses
 │   └── processed/
 │       └── .gitkeep
-├── docs/                                  ← GitHub Pages site
-│   ├── index.html                         ← Interactive analysis dashboard
-│   └── plots/                             ← Plotly JSON data + PNG fallbacks
-├── yrbs_analysis_clean.ipynb              ← Full analysis notebook (data → EDA → modeling)
+├── docs/                                  <- GitHub Pages site
+│   ├── index.html                         <- Interactive analysis dashboard
+│   └── plots/                             <- Plotly JSON data + PNG fallbacks
+├── yrbs_analysis_clean.ipynb              <- Full analysis notebook (data → EDA → modeling)
 ├── LICENSE
 └── README.md
 ```
